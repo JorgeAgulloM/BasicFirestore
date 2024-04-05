@@ -30,7 +30,8 @@ class MainActivity : AppCompatActivity() {
         //subCollections()
         //basicRealTime()
         //basicRealTimeCollection()
-        basicQuery()
+        //basicQuery()
+        basicMediumQuery()
     }
 
     private fun basicInsert() {
@@ -56,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         for (i in 0..50) {
             val user = hashMapOf(
                 "name" to "Yorch$i",
-                "age" to 30 + 1,
+                "age" to 30 + i,
                 "happy" to (i % 2 == 0),
                 "extraInfo" to null
             )
@@ -140,6 +141,21 @@ class MainActivity : AppCompatActivity() {
     private fun basicQuery() {
         val query = firestore.collection("users")
             .orderBy("age", Query.Direction.DESCENDING)
+            .limit(10)
+        query.get().addOnSuccessListener { snapShot ->
+            snapShot.forEach { result ->
+                Log.i("LOGTAG", "Se actualiza los datos en tiempo real: ${result.data}")
+            }
+        }
+    }
+
+    // La primera vez que hagamos una consulta, fallará, devolverá una url con la cual crear un indice en el proyecto
+    // para poder acceder a la consulta rápidamente.
+    private fun basicMediumQuery() {
+        val query = firestore.collection("users")
+            .orderBy("age", Query.Direction.DESCENDING)
+            .whereEqualTo("happy", true)
+            .whereGreaterThan("age", 40)
             .limit(10)
         query.get().addOnSuccessListener { snapShot ->
             snapShot.forEach { result ->
