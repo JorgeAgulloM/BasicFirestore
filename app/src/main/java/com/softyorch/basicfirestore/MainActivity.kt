@@ -3,9 +3,11 @@ package com.softyorch.basicfirestore
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class MainActivity : AppCompatActivity() {
@@ -18,7 +20,8 @@ class MainActivity : AppCompatActivity() {
         firestore = Firebase.firestore
         //basicInsert()
         //multipleInserts()
-        basicReadData()
+        //basicReadData()
+        basicReadDocument()
     }
 
     private fun basicInsert() {
@@ -45,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             val user = hashMapOf(
                 "name" to "Yorch$i",
                 "age" to 30 + 1,
-                "happy" to (i%2 == 0),
+                "happy" to (i % 2 == 0),
                 "extraInfo" to null
             )
             firestore.collection("users").add(user)
@@ -54,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun basicReadData() {
         firestore.collection("users").get()
-            .addOnSuccessListener {  snapshot ->
+            .addOnSuccessListener { snapshot ->
                 Log.i("LOGTAG", "success")
                 snapshot.forEach { doc ->
                     val id = doc.id
@@ -63,5 +66,14 @@ class MainActivity : AppCompatActivity() {
             }.addOnFailureListener {
 
             }
+    }
+
+    private fun basicReadDocument() {
+        lifecycleScope.launch {
+            val result =
+                firestore.collection("users").document("joKyHcRGrUHvTDKIJEnu").get().await()
+            val id = result.id
+            Log.i("LOGTAG", "id: $id -> value: ${result.data}")
+        }
     }
 }
