@@ -11,7 +11,6 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlin.math.cos
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,7 +25,8 @@ class MainActivity : AppCompatActivity() {
         //basicReadData()
         //basicReadDocument()
         //basicReadDocumentWithParse()
-        basicReadDocumentFromCache()
+        //basicReadDocumentFromCache()
+        subCollections()
     }
 
     private fun basicInsert() {
@@ -103,6 +103,19 @@ class MainActivity : AppCompatActivity() {
             val id = result.id
             Log.i("LOGTAG", "id: $id -> value: ${result.data}")
         }
+    }
+
+    private fun subCollections() {
+        firestore.collection("users")
+            .document("softyorch")
+            .collection("favs")
+            .document("cp7lwhTY5jRRxwfCIz2z")
+            .collection("locura")
+            .document("7N6jNNjp7XANaEKAmaue")
+            .addSnapshotListener { value, error ->
+                Log.i("LOGTAG", "Locura: ${value?.data}")
+            }
+
     }
 }
 
