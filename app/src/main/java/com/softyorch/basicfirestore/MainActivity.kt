@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -24,7 +25,8 @@ class MainActivity : AppCompatActivity() {
         //multipleInserts()
         //basicReadData()
         //basicReadDocument()
-        basicReadDocumentWithParse()
+        //basicReadDocumentWithParse()
+        basicReadDocumentFromCache()
     }
 
     private fun basicInsert() {
@@ -88,6 +90,18 @@ class MainActivity : AppCompatActivity() {
             val id = result.id
             val cosa = result.toObject<UserData>()?.copy(id = id)
             Log.i("LOGTAG", "Cosa --> id: $id -> value: $cosa")
+        }
+    }
+
+    private fun basicReadDocumentFromCache() {
+        lifecycleScope.launch {
+            val ref = firestore.collection("users").document("joKyHcRGrUHvTDKIJEnu")
+
+            val source = Source.CACHE
+
+            val result = ref.get(source).await()
+            val id = result.id
+            Log.i("LOGTAG", "id: $id -> value: ${result.data}")
         }
     }
 }
