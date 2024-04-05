@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlin.math.cos
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +23,8 @@ class MainActivity : AppCompatActivity() {
         //basicInsert()
         //multipleInserts()
         //basicReadData()
-        basicReadDocument()
+        //basicReadDocument()
+        basicReadDocumentWithParse()
     }
 
     private fun basicInsert() {
@@ -76,4 +79,22 @@ class MainActivity : AppCompatActivity() {
             Log.i("LOGTAG", "id: $id -> value: ${result.data}")
         }
     }
+
+    private fun basicReadDocumentWithParse() {
+        lifecycleScope.launch {
+            val result =
+                firestore.collection("users").document("joKyHcRGrUHvTDKIJEnu").get().await()
+
+            val id = result.id
+            val cosa = result.toObject<UserData>()?.copy(id = id)
+            Log.i("LOGTAG", "Cosa --> id: $id -> value: $cosa")
+        }
+    }
 }
+
+data class UserData(
+    val id: String? = null,
+    val name: String? = null,
+    val age: Int? = null,
+    val happy: Boolean = false
+)
