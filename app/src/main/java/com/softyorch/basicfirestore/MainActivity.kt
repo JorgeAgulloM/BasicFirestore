@@ -26,7 +26,8 @@ class MainActivity : AppCompatActivity() {
         //basicReadDocument()
         //basicReadDocumentWithParse()
         //basicReadDocumentFromCache()
-        subCollections()
+        //subCollections()
+        basicRealTime()
     }
 
     private fun basicInsert() {
@@ -116,6 +117,14 @@ class MainActivity : AppCompatActivity() {
                 Log.i("LOGTAG", "Locura: ${value?.data}")
             }
 
+    }
+
+    private fun basicRealTime() {
+        firestore.collection("users")
+            .document("softyorch")
+            .addSnapshotListener { value, error ->
+                Log.i("LOGTAG", "Se actualiza los datos en tiempo real: ${value?.data}")
+            }
     }
 }
 
