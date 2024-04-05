@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -28,7 +29,8 @@ class MainActivity : AppCompatActivity() {
         //basicReadDocumentFromCache()
         //subCollections()
         //basicRealTime()
-        basicRealTimeCollection()
+        //basicRealTimeCollection()
+        basicQuery()
     }
 
     private fun basicInsert() {
@@ -133,6 +135,17 @@ class MainActivity : AppCompatActivity() {
             .addSnapshotListener { value, error ->
                 Log.i("LOGTAG", "Se actualiza los datos en tiempo real: ${value?.size()}")
             }
+    }
+
+    private fun basicQuery() {
+        val query = firestore.collection("users")
+            .orderBy("age", Query.Direction.DESCENDING)
+            .limit(10)
+        query.get().addOnSuccessListener { snapShot ->
+            snapShot.forEach { result ->
+                Log.i("LOGTAG", "Se actualiza los datos en tiempo real: ${result.data}")
+            }
+        }
     }
 }
 
