@@ -16,7 +16,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         firestore = Firebase.firestore
-        basicInsert()
+        //basicInsert()
+        multipleInserts()
     }
 
     private fun basicInsert() {
@@ -37,4 +38,17 @@ class MainActivity : AppCompatActivity() {
                 Log.e("LOGTAG", "Error: ${it.message}")
             }
     }
+
+    private fun multipleInserts() {
+        for (i in 0..50) {
+            val user = hashMapOf(
+                "name" to "Yorch$i",
+                "age" to 30 + 1,
+                "happy" to (i%2 == 0),
+                "extraInfo" to null
+            )
+            firestore.collection("users").add(user)
+        }
+    }
+
 }
