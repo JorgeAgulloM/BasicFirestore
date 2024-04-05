@@ -17,7 +17,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         firestore = Firebase.firestore
         //basicInsert()
-        multipleInserts()
+        //multipleInserts()
+        basicReadData()
     }
 
     private fun basicInsert() {
@@ -51,4 +52,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun basicReadData() {
+        firestore.collection("users").get()
+            .addOnSuccessListener {  snapshot ->
+                Log.i("LOGTAG", "success")
+                snapshot.forEach { doc ->
+                    val id = doc.id
+                    Log.i("LOGTAG", "id: $id -> value: ${doc.data}")
+                }
+            }.addOnFailureListener {
+
+            }
+    }
 }
